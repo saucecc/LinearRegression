@@ -23,7 +23,7 @@ See src/cpp/linear_regression.cpp;
 
 <pre> Least Squares Linear Regression: 
 We want to find the weight vector \\( \theta \\) that minimizes the squared error between predicted and actual outputs. 
-Loss Function: - \\( X \\in \mathbb{R}^{m \times n} \\): design matrix (with bias term added) - \\( y \\in \mathbb{R}^{m \times 1} \\): target output - \\( \theta \in \mathbb{R}^{n \times 1} \\): parameter vector We define the **least squares loss** as: $$ J(\theta) = \| X\theta - y \|^2 = (X\theta - y)^T (X\theta - y) $$ ### Taking the Gradient To minimize the loss, we take the gradient with respect to \\( \theta \\): $$ \nabla_\theta J(\theta) = 2 X^T (X\theta - y) $$ ### Solving for \\( \theta \\) Set the gradient to zero: $$ X^T (X\theta - y) = 0 $$ Distribute: $$ X^T X \theta = X^T y $$ Finally, solve for \\( \theta \\): $$ \theta = (X^T X)^{-1} X^T y $$ This is the **closed-form solution** to linear regression using the **normal equation**. </pre>
+Loss Function: - $$\\( X \\in \mathbb{R}^{m \times n} \\)$$: design matrix (with bias term added) - \\( y \\in \mathbb{R}^{m \times 1} \\): target output - \\( \theta \in \mathbb{R}^{n \times 1} \\): parameter vector We define the **least squares loss** as: $$ J(\theta) = \| X\theta - y \|^2 = (X\theta - y)^T (X\theta - y) $$ ### Taking the Gradient To minimize the loss, we take the gradient with respect to \\( \theta \\): $$ \nabla_\theta J(\theta) = 2 X^T (X\theta - y) $$ ### Solving for \\( \theta \\) Set the gradient to zero: $$ X^T (X\theta - y) = 0 $$ Distribute: $$ X^T X \theta = X^T y $$ Finally, solve for \\( \theta \\): $$ \theta = (X^T X)^{-1} X^T y $$ This is the **closed-form solution** to linear regression using the **normal equation**. </pre>
 
 # DESIGN DECISIONS #
 
