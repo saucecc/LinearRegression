@@ -9,31 +9,30 @@ I included concepts from each chapter of MATH-3130
 
 With this goal in mind, all matrix operations were implemented from scratch (see src/cpp/matrix.cc); these include: 
 
-    * **transposing a matrix**
-    * **inverting a matrix (implemented via gaussian eimination w/ partial pivoting)**
-    * **multiplying two matrices**
-    * **matrix arithmetic**
+    * **transposing a matrix**  
+    * **inverting a matrix (implemented via gaussian eimination w/ partial pivoting)**  
+    * **multiplying two matrices**  
+    * **matrix arithmetic**  
 
-I went with the traditional approach of solving LR (least squares) rather than gradient descent. 
-I extensively commented my code in hopes of making it as readable as possible and ensuring the logic is clear. 
-I also included the time complexity of my implementations for consideration
+I went with the traditional approach of solving LR (least squares) rather than gradient descent.   
+I extensively commented my code in hopes of making it as readable as possible and ensuring the logic is clear.  
+I also included the time complexity of my implementations for consideration  
 
 ## LINEAR REGRESSION ## 
 See src/cpp/linear_regression.cpp;
 
 Least Squares Linear Regression: 
     In class, Least Squares was presented as the element-wise minimum; but in matrix form our goal is to minimize this loss:
-        - our loss: $$L(D, \theta) = ||Y-X\theta||^{2} = (Y-X\theta)^{T}(Y-X\theta)$$
-            = $$Y^{T}Y-Y^{T}X\theta - (theta)^{T}XY + (theta)^{T}X^{T}X\theta$$
-            = $$Y^{T}Y-X^{T}Y\theta - X^{T}Y\theta+X^{T}X\theta^{2}$$
-        Taking the gradient: 
-            $$\frac{\partial L(D, \theta)}{\partial \theta} = \frac{\partial(Y^{T}Y-X^{T}Y\theta-X^{T}Y\theta + X^{T}X\theta^{2})}{\partial \theta}$$
-            $$=2X^{T}Y+2X^{T}X\theta$$
-            We know that to minmize, we set this to 0. So; 
-                $$2X^{T}Y+2X^{T}X\theta=0\implies X^{T}Y=X^{T}X\theta$$
-                $$\implies \hat{\theta} = (X^{T}X)^{-1}X^{T}Y$$
+        - our loss: $$L(D, \theta) = ||Y-X\theta||^{2} = (Y-X\theta)^{T}(Y-X\theta)$$  
+            = $$Y^{T}Y-Y^{T}X\theta - (theta)^{T}XY + (theta)^{T}X^{T}X\theta$$  
+            = $$Y^{T}Y-X^{T}Y\theta - X^{T}Y\theta+X^{T}X\theta^{2}$$  
+        Taking the gradient:   
+            $$\frac{\partial L(D, \theta)}{\partial \theta} = \frac{\partial(Y^{T}Y-X^{T}Y\theta-X^{T}Y\theta + X^{T}X\theta^{2})}{\partial \theta}$$  
+            $$=2X^{T}Y+2X^{T}X\theta$$  
+            We know that to minmize, we set this to 0. So;   
+                $$2X^{T}Y+2X^{T}X\theta=0\implies X^{T}Y=X^{T}X\theta$$  
+                $$\implies \hat{\theta} = (X^{T}X)^{-1}X^{T}Y$$  
 
-$$ X^{T}X $$ 
 
 # DESIGN DECISIONS #
 
