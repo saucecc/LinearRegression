@@ -1,7 +1,9 @@
 #include <limits.h>
 
+#include <chrono>
 #include <filesystem>
 #include <iostream>
+#include <thread>
 
 #include "dataset.h"
 #include "linear_regression.h"
@@ -109,6 +111,8 @@ void salary_reg() {
     // y_pred_unscaled.print();
     print_predictions_vs_actual(y_pred_unscaled, y_test, 20);
     evaluate_predictions(y_pred_unscaled, y_test, "SALARY_DATA");
+    y_pred_unscaled.write_to_csv("data/output/salary-pred.csv");
+    y_test.write_to_csv("data/output/salary-actual.csv");
 }
 
 void bev_sales_reg() {
@@ -145,6 +149,8 @@ void bev_sales_reg() {
     y_pred_unscaled.head(15);
     print_predictions_vs_actual(y_pred_unscaled, y_test, 20);
     evaluate_predictions(y_pred_unscaled, y_test, "BEVERAGE_SALES");
+    y_pred_unscaled.write_to_csv("data/output/bev-sales-pred.csv");
+    y_test.write_to_csv("data/output/bev-sales-actual.csv");
 }
 
 void cali_housing_reg() {
@@ -181,20 +187,26 @@ void cali_housing_reg() {
     matrix y_pred_unscaled = cali_housing_data.unscale_labels(y_pred);
     y_pred_unscaled.head(15);
     evaluate_predictions(y_pred_unscaled, y_test, "CALI_HOUSING_PRICE");
+    y_pred_unscaled.write_to_csv("data/output/cali-housing-pred.csv");
+    y_test.write_to_csv("data/output/cali-housing-actual.csv");
 }
 
 int main(int argc, char* argv[]) {
-    std::cout << "running linear regression on California Housing Dataset"
-              << std::endl;
     std::filesystem::path cwd = std::filesystem::current_path();
     std::cout << "Current working directory: " << cwd << std::endl;
 
-    // dataset cali_housing_data =
-    // dataset("data/input/cali-housing-encoding2.csv",
-    //                                     .20, "median_house_value", true);
-    // cali - housing - no - ocean dataset
-    // cali_housing_reg();
-    // salary_reg();
-    // cali_housing_reg();
+    std::cout << "running linear regression on Salary" << std::endl;
+    salary_reg();
+
+    // std::this_thread::sleep_for(std::chrono::seconds(4));
+    std::cout << "running linear regression on Beverage Sales Dataset"
+              << std::endl;
+
     bev_sales_reg();
+
+    // std::this_thread::sleep_for(std::chrono::seconds(4));
+    std::cout << "running linear regression on California Housing Dataset"
+              << std::endl;
+
+    cali_housing_reg();
 }

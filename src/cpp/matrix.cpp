@@ -431,3 +431,23 @@ double matrix::max_col(int col) const {
     }
     return max_val;
 }
+
+void matrix::write_to_csv(const std::string& filename) const {
+    std::ofstream file(filename);
+    if (!file.is_open()) {
+        std::cerr << "[ERROR] Failed to open file for writing: " << filename
+                  << "\n";
+        return;
+    }
+
+    for (int i = 0; i < m; i++) {
+        for (int j = 0; j < n; j++) {
+            file << this->data[i][j];
+            if (j < n - 1) file << ",";
+        }
+        file << "\n";
+    }
+
+    file.close();
+    std::cout << "[INFO] Matrix written to CSV: " << filename << "\n";
+}

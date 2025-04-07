@@ -37,6 +37,7 @@ class matrix {
     double at(int i, int j) const;
     double min_col(int col) const;
     double max_col(int col) const;
+    void write_to_csv(const std::string& filename) const;
 
    private:
     std::vector<std::vector<double>> data;
