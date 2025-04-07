@@ -43,6 +43,6 @@ result = subprocess.run(["./bin/main"], capture_output=True, text=True)
 print(result.stdout)
 
 plot_predictions_vs_actual("data/output/salary-pred.csv", "data/output/salary-actual.csv", "Salary Predicted vs Actual", limit = 8, k=1)
-plot_predictions_vs_actual("data/output/bev-sales-pred.csv", "data/output/bev-sales-actual.csv", "Beverage Sales Predicted vs Actual", limit = 100, k=2)
-plot_predictions_vs_actual("data/output/cali-housing-pred.csv", "data/output/cali-housing-actual.csv", "California Housing Block Prices Predicted vs Actual", limit = 100, k=3)
+plot_predictions_vs_actual("data/output/bev-sales-pred.csv", "data/output/bev-sales-actual.csv", "Beverage Sales Predicted vs Actual", limit = 300, k=2)
+plot_predictions_vs_actual("data/output/cali-housing-pred.csv", "data/output/cali-housing-actual.csv", "California Housing Block Prices Predicted vs Actual", limit = 1000, k=3)
 
