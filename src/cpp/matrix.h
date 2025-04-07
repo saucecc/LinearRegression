@@ -3,6 +3,7 @@
 
 #include <fstream>
 #include <iostream>
+#include <sstream>
 #include <string>
 #include <vector>
 
@@ -17,14 +18,25 @@ class matrix {
     matrix copy();
     matrix transpose();
     matrix multiply(matrix& B);
+    matrix multiply(double c);
     matrix inverse();
-    void print();
-    int get_rows();
-    int get_cols();
-    std::vector<std::vector<double>> get_data();
+    void print() const;
+    int get_rows() const;
+    int get_cols() const;
+    std::vector<std::vector<double>> get_data() const;
     matrix add(matrix& mat);
     matrix subtract(matrix& mat);
     matrix add_leading_col_ones();
+    bool equals(const matrix& mat) const;
+    matrix row_subset(int start_row, int end_row) const;
+    matrix row_subset(int start_row) const;
+    matrix min_max_scaled(int end_track_scale) const;
+    matrix extract_col(matrix& labels, int ind);
+    void head(int rows);
+    matrix add_identity_scaled(double lambda) const;
+    double at(int i, int j) const;
+    double min_col(int col) const;
+    double max_col(int col) const;
 
    private:
     std::vector<std::vector<double>> data;
