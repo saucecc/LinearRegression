@@ -32,7 +32,7 @@ def plot_predictions_vs_actual(pred_path, actual_path, title="Predicted vs Actua
     plt.tight_layout()
 
     plt.show()
-    plt.savefig("data/output/plot-" + str(k) + ".png")
+    plt.savefig("plot-" + str(k) + ".png")
 
 print("runnning c++ tests from python")
 result_t = subprocess.run(["./bin/test"], capture_output=True, text=True)
