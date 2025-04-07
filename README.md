@@ -33,7 +33,7 @@ See src/cpp/linear_regression.cpp;
 Least Squares Linear Regression: 
     In class, Least Squares was presented as the element-wise minimum; but in matrix form our goal is to minimize this loss:  
         - our loss: $$L(D, \theta) = ||Y-X\theta||^{2} = (Y-X\theta)^{T}(Y-X\theta)$$  
-            = $$Y^{T}Y-Y^{T}X\theta - (theta)^{T}XY + (theta)^{T}X^{T}X\theta$$  
+            = $$Y^{T}Y-Y^{T}X\theta - (\theta)^{T}XY + (\theta)^{T}X^{T}X\theta$$  
             = $$Y^{T}Y-X^{T}Y\theta - X^{T}Y\theta+X^{T}X\theta^{2}$$  
         Taking the gradient:   
             $$\frac{\partial L(D, \theta)}{\partial \theta} = \frac{\partial(Y^{T}Y-X^{T}Y\theta-X^{T}Y\theta + X^{T}X\theta^{2})}{\partial \theta}$$  
@@ -54,27 +54,25 @@ This was done for ease, as visualizing in C++ can be tricky and the Python libra
 
 # TESTING & DATASETS #
 
-* California Housing Dataset: 
- - https://www.kaggle.com/datasets/camnugent/california-housing-prices
- - ~ 20,000 rows
- - one-hot encoded (only for proximity to ocean)
+* Salary Dataset: 
+    - Source: https://www.kaggle.com/datasets/abhishek14398/salary-dataset-simple-linear-regression
+    - data/input/Salary_dataset2.csv
+    - ~30 rows
+    - super simple regression problem, the LR model performs pretty well on this
+
+* Beverage Sales:  
+    - Source: https://www.kaggle.com/datasets/victoriajabdulkadir/beverage-sales-prediction
+    - data/input/beverage_sales.csv
+    - ~1,000 rows 
+
+* California Housing Prices:  
+    - Source: https://www.kaggle.com/datasets/camnugent/california-housing-prices  
+    - data/input/cali-housing-encoding2.csv  
+    - ~20,000 rows  
+    - one-hot encoded (only for proximity to ocean)
 
 
-
-## TESTING ## 
-To test the matrix class that I wrote, I wrote an additional file (src/cpp/matrixtest.cc) that tests the matrix operations
-Given that these are correct, we know that the linear regression implementation will work, since it just relies on the matrix operations. 
-However I have included a toy example for linear regression as well, to verify correctness
-
-# DEBUGGING & CHALLENGES # 
-I had to write extensive test cases to get everythign working properly. Working with such a large dataset with such a wide range of values and using one-hot encoding resulted in numerical instability. The main way that this was fixed was via **ridge regression**. 
-
-I ended up using $$\theta = (X^{T}X+\lambda I)^{-1}X^{T}y$$, with very small $$\lambda \approx 1e-3)$$. This solved the issue for me for smaller test cases, but it was still a struggle on larger ones. Perhaps LU factorization or a better inversion algorithm would have helped. 
-
-## DATASETS ## 
-California Housing Prices:  
-    - Source: https://www.kaggle.com/datasets/camnugent/california-housing-prices
-    - data/input/cali-housing.csv
+* The LR model struggled a lot on this dataset, perhaps due to its size
     
 From dataset page:  
 1. longitude: A measure of how far west a house is; a higher value is farther west  
@@ -89,25 +87,35 @@ From dataset page:
 10. oceanProximity: Location of the house w.r.t ocean/sea  
 
 
+## TESTING ## 
+To test the matrix class that I wrote, I wrote an additional file (src/cpp/matrixtest.cc) that tests the matrix operations
+Given that these are correct, we know that the linear regression implementation will work, since it just relies on the matrix operations. 
+However I have included a toy example for linear regression as well, to verify correctness
+
+# DEBUGGING & CHALLENGES # 
+I had to write extensive test cases to get everythign working properly. Working with such a large dataset with such a wide range of values and using one-hot encoding resulted in numerical instability. The main way that this was fixed was via **ridge regression**. 
+
+I ended up using $$\theta = (X^{T}X+\lambda I)^{-1}X^{T}y$$, with very small $$\lambda \approx 1e-3)$$. This solved the issue for me for smaller test cases, but it was still a struggle on larger ones. Perhaps LU factorization or a better inversion algorithm would have helped. 
+
 # REQUIREMENTS #
 
 Requirements: Python 3 installed, g++ to compile the c++ code  
 
 If you do not have these installed, do the following: 
-    WINDOWS:  
-        * python3: Install from https://www.python.org/downloads/  
-        * g++ and make:  
-            * the (easier) option is to just use WSL. But if you do not have this, we can do: 
-            * Install https://www.msys2.org/  
-                * download the .exe and install   
-                * to install g++ and make, in the MSYS terminal run:  
-                    pacman -Syu  
-                    pacman -S make gcc  
-                * Now you can use this terminal to run make and compile the C++ code  
+* WINDOWS:  
+    * python3: Install from https://www.python.org/downloads/  
+    * g++ and make:  
+        - the (easier) option is to just use WSL. But if you do not have this, we can do: 
+        - Install https://www.msys2.org/  
+            - download the .exe and install   
+            - to install g++ and make, in the MSYS terminal run:  
+                pacman -Syu  
+                pacman -S make gcc  
+            - Now you can use this terminal to run make and compile the C++ code  
  
-    MAC: 
-        * python3: brew install python  
-        * g++: xcode-select --install (installs g++ and make)  
+* MAC: 
+    * python3: brew install python  
+    * g++: xcode-select --install (installs g++ and make)  
 
 pip should be installed with python 3. run: 
 pip install -r python/requirements.txt 
@@ -116,6 +124,9 @@ pip install -r python/requirements.txt
 Now we should be all good to run the project! 
 
 ## BUILD DIRECTIONS ##
+
+git clone https://github.com/saucecc/LinearRegression.git
+
 
 ./bin/main - Run the main code, which does linear regression on three different datatsets, the output of which can be seen in the terminal
 ./bin/test - Run the matrix test cases, along with the simple linear regression example

@@ -7,7 +7,8 @@
 #include "linear_regression.h"
 #include "matrix.h"
 
-void evaluate_predictions(const matrix& predicted, const matrix& actual) {
+void evaluate_predictions(const matrix& predicted, const matrix& actual,
+                          std::string tag) {
     int n = predicted.get_rows();
 
     if (n != actual.get_rows()) {
@@ -44,11 +45,33 @@ void evaluate_predictions(const matrix& predicted, const matrix& actual) {
     // R² = 1 - (SS_res / SS_tot)
     double r2 = 1.0 - (mse * n / sum_sq_total);
 
-    std::cout << "\nEvaluation Metrics:\n";
+    std::cout << "\n" << tag << " Evaluation Metrics:\n";
     std::cout << " - MAE  = " << mae << "\n";
     std::cout << " - MSE  = " << mse << "\n";
     std::cout << " - RMSE = " << rmse << "\n";
-    std::cout << " - R²   = " << r2 << "\n";
+}
+
+void print_predictions_vs_actual(const matrix& predictions,
+                                 const matrix& actual, int limit = 20) {
+    int n = predictions.get_rows();
+
+    if (n != actual.get_rows()) {
+        std::cerr << "[ERROR] Prediction and actual label matrices have "
+                     "different sizes!\n";
+        return;
+    }
+
+    std::cout << "Row\tPredicted\tActual\t\t(Error)\n";
+    std::cout << "----------------------------------------------\n";
+
+    for (int i = 0; i < std::min(n, limit); i++) {
+        double pred = predictions.at(i, 0);
+        double act = actual.at(i, 0);
+        double diff = std::abs(pred - act);
+
+        std::cout << i << "\t" << std::fixed << std::setprecision(2) << pred
+                  << "\t\t" << act << "\t\t" << diff << "\n";
+    }
 }
 
 void salary_reg() {
@@ -83,9 +106,9 @@ void salary_reg() {
     std::cerr
         << "------------PREDICTED LABELS UNSCALED HEAD (15 rows)------------\n";
     matrix y_pred_unscaled = salary_data.unscale_labels(y_pred);
-    y_pred_unscaled.print();
-    std::cerr << "SALARY DATA (SIMPLE) LINEAR REGRESSION ERROR:";
-    evaluate_predictions(y_pred_unscaled, y_test);
+    // y_pred_unscaled.print();
+    print_predictions_vs_actual(y_pred_unscaled, y_test, 20);
+    evaluate_predictions(y_pred_unscaled, y_test, "SALARY_DATA");
 }
 
 void bev_sales_reg() {
@@ -120,8 +143,8 @@ void bev_sales_reg() {
         << "------------PREDICTED LABELS UNSCALED HEAD (15 rows)------------\n";
     matrix y_pred_unscaled = bev_sales.unscale_labels(y_pred);
     y_pred_unscaled.head(15);
-    std::cerr << "BEV SALES DATA LINEAR REGRESSION ERROR:";
-    evaluate_predictions(y_pred_unscaled, y_test);
+    print_predictions_vs_actual(y_pred_unscaled, y_test, 20);
+    evaluate_predictions(y_pred_unscaled, y_test, "BEVERAGE_SALES");
 }
 
 void cali_housing_reg() {
@@ -157,7 +180,7 @@ void cali_housing_reg() {
         << "------------PREDICTED LABELS UNSCALED HEAD (15 rows)------------\n";
     matrix y_pred_unscaled = cali_housing_data.unscale_labels(y_pred);
     y_pred_unscaled.head(15);
-    evaluate_predictions(y_pred_unscaled, y_test);
+    evaluate_predictions(y_pred_unscaled, y_test, "CALI_HOUSING_PRICE");
 }
 
 int main(int argc, char* argv[]) {
