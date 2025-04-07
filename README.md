@@ -12,12 +12,15 @@ Actually coding up these algorithms has given me a much better understanding of 
     - Note the predictions for the salary don't look great but this is just b.c. of such a tiny test/train set
     - We can see how well it the model performs on beverage sales in plot-2
  - The main thing I think I could improve is the numerical stability of inversion--I think this would help accuracy a lot
- - On the large cali-housing dataset, the model doesn't perform well but its outputs aren't nonsense. Once again I think stability is the problem here 
+ - On the large cali-housing dataset, the model doesn't perform super well but its outputs aren't nonsense. I think stability is the problem here 
  - Overall, the model and matrix operations work--and well. This can be seen via the test cases in src/cpp/test.cpp
 
 * **WORKFLOW**
  - I used C++ for implementing all the matrix operations; this is because I primarily code in C++, and I did not want to use any libraries 
  - Python is used to run the C++ code, and display it's results nicely--nothing really important is done in these files
+ - **PLEASE NOTE** the plots this code generates--I think they're the most interesting part! 
+
+Thanks for taking the time to read - Connor 
 
 ## MATRIX OPERATIONS ##
 

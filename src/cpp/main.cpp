@@ -156,7 +156,7 @@ void bev_sales_reg() {
 void cali_housing_reg() {
     std::cerr << "Loading cali housing data..." << std::endl;
     dataset cali_housing_data =
-        dataset("data/input/cali-housing-encoding2.csv", .20, 9, true);
+        dataset("data/input/cali-housing-encoding2.csv", .20, 8, true);
 
     cali_housing_data.print_cols();
     std::cerr << "------------TRAIN DATA HEAD (15 rows)------------\n";
@@ -186,6 +186,7 @@ void cali_housing_reg() {
         << "------------PREDICTED LABELS UNSCALED HEAD (15 rows)------------\n";
     matrix y_pred_unscaled = cali_housing_data.unscale_labels(y_pred);
     y_pred_unscaled.head(15);
+    print_predictions_vs_actual(y_pred_unscaled, y_test, 20);
     evaluate_predictions(y_pred_unscaled, y_test, "CALI_HOUSING_PRICE");
     y_pred_unscaled.write_to_csv("data/output/cali-housing-pred.csv");
     y_test.write_to_csv("data/output/cali-housing-actual.csv");
