@@ -2,17 +2,17 @@
 
 The goal of this project is to implement Linear Regression from scratch in C++.
 
-The motivation was to gain a more comprehensive understanding of the linear algebra behind regression, and how these algorithms are implemented in practice. I included concepts from each chapter of MATH-3130. 
+The motivation was to gain a more comprehensive understanding of the linear algebra behind regression, and how these algorithms are implemented in practice. 
 
 Actually coding up these algorithms has given me a much better understanding of how they work, and why certain things are important. As an example, I struggled a lot with numerical instability throughout the project, which isn't necessarily something that you typically deal with when working in theory, but becomes super important in practice. Until I implemented partial pivoting, my inverse matrices were absolute nonsense. It also has helped me gain more appreciation for the research and testing that has gone into developing fast algorithms for matrix multiplication, inversion, and linear regression. It is clearly not trivial.
 
-* **RESULTS**
+**RESULTS**
  - Overall, I am pretty happy with the results I was able to achieve with (relatively) simple matrix algorithms and linear regression w/ ridge reg.  
  - On the smaller datasets (salary-pred, bev-sales), I was able to get pretty good predictions for a closed-form least-squares solution  
     - Note the predictions for the salary don't look great but this is just b.c. of such a tiny test/train set  
     - We can see how well it the model performs on beverage sales in plot-2  
  - The main thing I think I could improve is the numerical stability of inversion--I think this would help accuracy a lot  
- - On the large cali-housing dataset, the model doesn't perform super well but its outputs aren't nonsense. I think stability is the problem here  
+ - On the large cali-housing dataset, the model doesn't perform super well but its outputs aren't nonsense. I think stability is the problem here. I say this because it was hard to get sensible weights without lots of regularization
  - Overall, the model and matrix operations work--and well. This can be seen via the test cases in src/cpp/test.cpp  
 
 * **WORKFLOW**
