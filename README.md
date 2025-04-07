@@ -91,10 +91,10 @@ From dataset page:
 
 # REQUIREMENTS #
 
-Requirements: Python 3 installed, g++ to compile the c++ code
+Requirements: Python 3 installed, g++ to compile the c++ code  
 
 If you do not have these installed, do the following: 
-    WINDOWS: 
+    WINDOWS:  
         * python3: Install from https://www.python.org/downloads/  
         * g++ and make:  
             * the (easier) option is to just use WSL. But if you do not have this, we can do: 
