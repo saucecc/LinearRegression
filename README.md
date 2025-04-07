@@ -9,10 +9,10 @@ I included concepts from each chapter of MATH-3130
 
 With this goal in mind, all matrix operations were implemented from scratch (see src/cpp/matrix.cc); these include: 
 
-    * **transposing a matrix**  
-    * **inverting a matrix (implemented via gaussian eimination w/ partial pivoting)**  
-    * **multiplying two matrices**  
-    * **matrix arithmetic**  
+* **transposing a matrix**  
+* **inverting a matrix (implemented via gaussian eimination w/ partial pivoting)**  
+* **multiplying two matrices**  
+* **matrix arithmetic**  
 
 I went with the traditional approach of solving LR (least squares) rather than gradient descent.   
 I extensively commented my code in hopes of making it as readable as possible and ensuring the logic is clear.  
