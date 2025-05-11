@@ -98,8 +98,8 @@ void salary_reg() {
     matrix y_test = salary_data.get_unscaled_test_labels();
     y_test.head(8);
 
-    linear_regression lr = linear_regression(LEAST_SQUARES);
-    lr.train(X_train, y_train, 10);
+    linear_regression lr = linear_regression(LEAST_SQUARES, INVERSE);
+    lr.fit(X_train, y_train, 10);
 
     std::cerr << "------------PREDICTED LABELS HEAD (15 rows)------------\n";
     matrix y_pred = lr.predict(X_test);
@@ -136,8 +136,8 @@ void bev_sales_reg() {
     matrix y_test = bev_sales.get_unscaled_test_labels();
     y_test.head(8);
 
-    linear_regression lr = linear_regression(LEAST_SQUARES);
-    lr.train(X_train, y_train, 1);
+    linear_regression lr = linear_regression(LEAST_SQUARES, INVERSE);
+    lr.fit(X_train, y_train, 1);
 
     std::cerr << "------------PREDICTED LABELS HEAD (15 rows)------------\n";
     matrix y_pred = lr.predict(X_test);
@@ -153,7 +153,7 @@ void bev_sales_reg() {
     y_test.write_to_csv("data/output/bev-sales-actual.csv");
 }
 
-void cali_housing_reg() {
+void cali_housing_reg(SOLVE_METHOD sm) {
     std::cerr << "Loading cali housing data..." << std::endl;
     dataset cali_housing_data =
         dataset("data/input/cali-housing-encoding2.csv", .20, 8, true);
@@ -175,8 +175,8 @@ void cali_housing_reg() {
     matrix y_test = cali_housing_data.get_unscaled_test_labels();
     y_test.head(15);
 
-    linear_regression lr = linear_regression(LEAST_SQUARES);
-    lr.train(X_train, y_train, 100);
+    linear_regression lr = linear_regression(LEAST_SQUARES, sm);
+    lr.fit(X_train, y_train, 100);
 
     std::cerr << "------------PREDICTED LABELS HEAD (15 rows)------------\n";
     matrix y_pred = lr.predict(X_test);
@@ -188,8 +188,8 @@ void cali_housing_reg() {
     y_pred_unscaled.head(15);
     print_predictions_vs_actual(y_pred_unscaled, y_test, 20);
     evaluate_predictions(y_pred_unscaled, y_test, "CALI_HOUSING_PRICE");
-    y_pred_unscaled.write_to_csv("data/output/cali-housing-pred.csv");
-    y_test.write_to_csv("data/output/cali-housing-actual.csv");
+    y_pred_unscaled.write_to_csv("data/output/cali-housing-pred2.csv");
+    y_test.write_to_csv("data/output/cali-housing-actual2.csv");
 }
 
 int main(int argc, char* argv[]) {
@@ -209,5 +209,5 @@ int main(int argc, char* argv[]) {
     std::cout << "running linear regression on California Housing Dataset"
               << std::endl;
 
-    cali_housing_reg();
+    cali_housing_reg(FACTORIZATION);
 }

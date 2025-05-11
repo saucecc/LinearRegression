@@ -2,11 +2,11 @@
 
 dataset::dataset(std::string filepath, double test_ratio, int label_ind,
                  bool min_max_scaling)
-    : train_data(ZERO, 0),
-      test_data(ZERO, 0),
-      train_labels(ZERO, 0),
-      test_labels(ZERO, 0),
-      test_labels_unscaled(ZERO, 0) {
+    : train_data(ZERO, 1),
+      test_data(ZERO, 1),
+      train_labels(ZERO, 1),
+      test_labels(ZERO, 1),
+      test_labels_unscaled(ZERO, 1) {
     std::ifstream file(filepath);
     if (!file) {
         std::cerr << "FAILED TO OPEN PASSED DATASET FILE\n";

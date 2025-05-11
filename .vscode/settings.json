@@ -58,6 +58,8 @@
         "forward_list": "cpp",
         "iomanip": "cpp",
         "optional": "cpp",
-        "ratio": "cpp"
+        "ratio": "cpp",
+        "stop_token": "cpp",
+        "thread": "cpp"
     }
 }

@@ -1,5 +1,7 @@
 #include "matrix.h"
 
+#include <cmath>
+
 matrix::matrix(std::string filepath) : data(0) {
     std::ifstream file(filepath);
 
@@ -32,6 +34,13 @@ matrix::matrix(std::string filepath) : data(0) {
     this->n = m > 0 ? data.at(0).size() : 0;
 }
 
+matrix::matrix(int rows, int cols, double val) {
+    this->m = rows;
+    this->n = cols;
+    this->data =
+        std::vector<std::vector<double>>(rows, std::vector<double>(cols, val));
+}
+
 matrix::matrix(std::vector<std::vector<double>> in_data) {
     this->data = in_data;
     this->m = data.size();
@@ -42,25 +51,23 @@ matrix::matrix(std::vector<std::vector<double>> in_data) {
         }
     }
 }
-
 matrix::matrix(SPECIAL t, int n) {
+    if (n <= 0) {
+        std::cerr << "[FATAL] Cannot create special matrix with n = " << n
+                  << "\n";
+        std::exit(1);
+    }
+    this->m = n;
+    this->n = n;
     this->data = std::vector<std::vector<double>>(n, std::vector<double>(n, 0));
-    switch (t) {
-        case ZERO:
-            break;
-        case IDENT:
-            for (int i = 0; i < n; i++) {
-                for (int j = 0; j < n; j++) {
-                    if (i == j) {
-                        this->data[i][j] = 1;
-                    }
-                }
-            }
-            break;
+    if (t == IDENT) {
+        for (int i = 0; i < n; i++) {
+            data[i][i] = 1.0;
+        }
     }
 }
 
-matrix matrix::copy() { return matrix(this->data); }
+matrix matrix::copy() const { return matrix(this->data); }
 
 /*
 Transpose a matrix;
@@ -130,6 +137,85 @@ void matrix::forward_elim(std::vector<std::vector<double>>& do_same_to) {
             }
         }
     }
+}
+
+std::vector<double> get_column(std::vector<std::vector<double>>& m_data,
+                               int j) {
+    int m = m_data.size();
+    std::vector<double> res(m);
+    for (int i = 0; i < m; i++) {
+        res[i] = m_data[i][j];
+    }
+    return res;
+}
+
+double dot_prod(std::vector<double> a, std::vector<double> b) {
+    double r = 0;
+    for (size_t i = 0; i < a.size(); i++) {
+        r += a[i] * b[i];
+    }
+    return r;
+}
+
+double vect_norm(std::vector<double> v) {
+    double s = 0;
+    for (auto& val : v) {
+        s += (val * val);
+    }
+    return sqrt(s);
+}
+
+matrix matrix::back_substitute(const matrix& y) const {
+    int n = this->get_rows();
+    std::vector<std::vector<double>> result_data(n,
+                                                 std::vector<double>(1, 0.0));
+
+    for (int i = n - 1; i >= 0; i--) {
+        double sum = 0.0;
+        for (int j = i + 1; j < n; j++) {
+            sum += this->data[i][j] * result_data[j][0];
+        }
+
+        double diag = this->data[i][i];
+        if (std::abs(diag) < 1e-12) {
+            std::cerr << "[ERROR] Singular matrix: zero on diagonal during "
+                         "back substitution\n";
+            diag = 1e-12;
+        }
+
+        result_data[i][0] = (y.data[i][0] - sum) / diag;
+    }
+
+    return matrix(result_data);
+}
+
+void matrix::qr_factorize(matrix& Q, matrix& R) const {
+    std::vector<std::vector<double>> a_data = this->get_data();
+    std::vector<std::vector<double>> q_data(m, std::vector<double>(n, 0.0));
+    std::vector<std::vector<double>> r_data(n, std::vector<double>(n, 0.0));
+
+    for (int j = 0; j < n; j++) {
+        std::vector<double> v = get_column(a_data, j);
+
+        for (int i = 0; i < j; i++) {
+            double dot = dot_prod(get_column(q_data, i), v);
+
+            r_data[i][j] = dot;
+            for (int k = 0; k < m; k++) {
+                v[k] -= dot * q_data[k][i];
+            }
+        }
+
+        double norm = vect_norm(v);
+        r_data[j][j] = norm;
+
+        for (int k = 0; k < m; k++) {
+            q_data[k][j] = v[k] / norm;
+        }
+    }
+
+    Q = matrix(q_data);
+    R = matrix(r_data);
 }
 
 double matrix::at(int i, int j) const { return this->data[i][j]; }
@@ -296,15 +382,18 @@ int matrix::get_cols() const { return this->n; }
 int matrix::get_rows() const { return this->m; }
 
 bool matrix::equals(const matrix& mat) const {
+    const double EPSILON = 1e-6;
     int p = mat.get_rows();
     int q = mat.get_cols();
     std::vector<std::vector<double>> mat_data = mat.get_data();
+
     if (m != p || n != q) {
         return false;
     }
+
     for (int x = 0; x < m; x++) {
         for (int y = 0; y < n; y++) {
-            if (mat_data[x][y] != this->data[x][y]) {
+            if (std::abs(mat_data[x][y] - this->data[x][y]) > EPSILON) {
                 return false;
             }
         }
@@ -319,6 +408,14 @@ matrix matrix::row_subset(int start_row, int end_row) const {
     std::vector<std::vector<double>> new_data;
     for (int r = start_row; r < end_row; r++) {
         new_data.push_back(this->data[r]);
+    }
+    return matrix(new_data);
+}
+
+matrix matrix::row_stack(const matrix& other) const {
+    std::vector<std::vector<double>> new_data = this->data;
+    for (const auto& row : other.get_data()) {
+        new_data.push_back(row);
     }
     return matrix(new_data);
 }

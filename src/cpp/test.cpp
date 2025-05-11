@@ -1,3 +1,4 @@
+#include <cmath>
 #include <iostream>
 
 #include "linear_regression.h"
@@ -47,7 +48,7 @@ void assert_equals(const matrix& mat1, const matrix& mat2, std::string tname) {
     }
 }
 
-void test_simple_linear_regression() {
+void test_simple_linear_regression(SOLVE_METHOD sm) {
     matrix_data X_data = {
         {1, 2},
         {2, 1},
@@ -65,8 +66,12 @@ void test_simple_linear_regression() {
     matrix X(X_data);
     matrix y(y_data);
 
-    linear_regression lr = linear_regression(LEAST_SQUARES);
-    lr.train(X, y, 1e-3);
+    std::cerr << "Simple linear regression using "
+              << ((sm == INVERSE) ? "inverse" : "LU factorization")
+              << " to solve\n";
+
+    linear_regression lr = linear_regression(LEAST_SQUARES, sm);
+    lr.fit(X, y, 1e-3);
 
     matrix preds = lr.predict(X);
     std::cerr << "---- PREDICTIONS ----" << std::endl;
@@ -81,6 +86,45 @@ void test_simple_linear_regression() {
     } else {
         std::cout << "FAILED: predictions deviate beyond epsilon of expected"
                   << std::endl;
+    }
+}
+
+void test_qr_factorization() {
+    // Input matrix A (3x3)
+    std::vector<std::vector<double>> qr_data{
+        {1.0, 1.0, 0.0}, {1.0, 0.0, 1.0}, {0.0, 1.0, 1.0}};
+    matrix A(qr_data);
+
+    // Output placeholders
+    matrix Q(IDENT, 1);  // will be resized
+    matrix R(IDENT, 1);  // will be resized
+
+    A.qr_factorize(Q, R);
+
+    std::cerr << "Q:\n";
+    Q.print();
+    std::cerr << "\nR:\n";
+    R.print();
+
+    // Test 1: Q^T Q ≈ I
+    matrix Qt = Q.transpose();
+    matrix QtQ = Qt.multiply(Q);
+    matrix I(QtQ.get_data());  // identity matrix
+
+    if (!QtQ.equals(I)) {
+        std::cerr << "FAILED: Q^T * Q != I (Q not orthonormal)\n";
+        QtQ.print();
+    } else {
+        std::cerr << "PASSED: Q is orthonormal (Q^T Q ≈ I)\n";
+    }
+
+    // Test 2: Q * R ≈ A
+    matrix QR = Q.multiply(R);
+    if (!QR.equals(A)) {
+        std::cerr << "FAILED: Q * R != A\n";
+        QR.print();
+    } else {
+        std::cerr << "PASSED: Q * R ≈ A\n";
     }
 }
 
@@ -147,6 +191,11 @@ int main() {
     assert_equals(A.add_leading_col_ones(), expected_with_ones,
                   "ADD LEADING COL OF ONES");
 
-    header("RUNNING SIMPLE LINEAR REGRESSION TEST");
-    test_simple_linear_regression();
+    header("RUNNING SIMPLE LINEAR REGRESSION (INVERSE) TEST");
+    test_simple_linear_regression(INVERSE);
+    header("RUNNING SIMPLE LINEAR REGRESSION (LU FACTORIZATION) TEST");
+    test_simple_linear_regression(FACTORIZATION);
+
+    // testing QR factorization
+    test_qr_factorization();
 }

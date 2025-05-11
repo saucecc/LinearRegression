@@ -14,15 +14,20 @@ class matrix {
     matrix(std::string csv);
     matrix(std::vector<std::vector<double>> data);
     matrix(SPECIAL t, int n);
+    matrix(int rows, int cols, double val);
 
-    matrix copy();
+    // basic helpers
+    matrix copy() const;
+    void print() const;
+    int get_rows() const;
+    int get_cols() const;
+
+    // basic lin alg operations
     matrix transpose();
     matrix multiply(matrix& B);
     matrix multiply(double c);
     matrix inverse();
-    void print() const;
-    int get_rows() const;
-    int get_cols() const;
+
     std::vector<std::vector<double>> get_data() const;
     matrix add(matrix& mat);
     matrix subtract(matrix& mat);
@@ -38,6 +43,13 @@ class matrix {
     double min_col(int col) const;
     double max_col(int col) const;
     void write_to_csv(const std::string& filename) const;
+
+    // factorization
+    void qr_factorize(matrix& Q, matrix& R) const;
+
+    std::vector<double> get_col(int c) const;
+    matrix back_substitute(const matrix& y) const;
+    matrix row_stack(const matrix& other) const;
 
    private:
     std::vector<std::vector<double>> data;
