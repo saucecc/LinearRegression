@@ -76,7 +76,7 @@ void print_predictions_vs_actual(const matrix& predictions,
     }
 }
 
-void salary_reg() {
+void salary_reg(SOLVE_METHOD sm, int tag) {
     std::cerr << "SALARY DATA (SIMPLE) LINEAR REGRESSION (ONE VAR)";
     dataset salary_data =
         dataset("data/input/Salary_dataset2.csv", .30, 1, true);
@@ -98,8 +98,8 @@ void salary_reg() {
     matrix y_test = salary_data.get_unscaled_test_labels();
     y_test.head(8);
 
-    linear_regression lr = linear_regression(LEAST_SQUARES, INVERSE);
-    lr.fit(X_train, y_train, 10);
+    linear_regression lr = linear_regression(LEAST_SQUARES, sm);
+    lr.fit(X_train, y_train, .01);
 
     std::cerr << "------------PREDICTED LABELS HEAD (15 rows)------------\n";
     matrix y_pred = lr.predict(X_test);
@@ -111,11 +111,13 @@ void salary_reg() {
     // y_pred_unscaled.print();
     print_predictions_vs_actual(y_pred_unscaled, y_test, 20);
     evaluate_predictions(y_pred_unscaled, y_test, "SALARY_DATA");
-    y_pred_unscaled.write_to_csv("data/output/salary-pred.csv");
-    y_test.write_to_csv("data/output/salary-actual.csv");
+    y_pred_unscaled.write_to_csv("data/output/salary-pred" +
+                                 std::to_string(tag) + ".csv");
+    y_test.write_to_csv("data/output/salary-actual" + std::to_string(tag) +
+                        ".csv");
 }
 
-void bev_sales_reg() {
+void bev_sales_reg(SOLVE_METHOD sm, int tag) {
     std::cerr << "BEVERAGE SALES DATA LINEAR REGRESSION" << std::endl;
     dataset bev_sales = dataset("data/input/beverage_sales.csv", .30, 2, true);
 
@@ -136,8 +138,8 @@ void bev_sales_reg() {
     matrix y_test = bev_sales.get_unscaled_test_labels();
     y_test.head(8);
 
-    linear_regression lr = linear_regression(LEAST_SQUARES, INVERSE);
-    lr.fit(X_train, y_train, 1);
+    linear_regression lr = linear_regression(LEAST_SQUARES, sm);
+    lr.fit(X_train, y_train, .01);
 
     std::cerr << "------------PREDICTED LABELS HEAD (15 rows)------------\n";
     matrix y_pred = lr.predict(X_test);
@@ -149,11 +151,13 @@ void bev_sales_reg() {
     y_pred_unscaled.head(15);
     print_predictions_vs_actual(y_pred_unscaled, y_test, 20);
     evaluate_predictions(y_pred_unscaled, y_test, "BEVERAGE_SALES");
-    y_pred_unscaled.write_to_csv("data/output/bev-sales-pred.csv");
-    y_test.write_to_csv("data/output/bev-sales-actual.csv");
+    y_pred_unscaled.write_to_csv("data/output/bev-sales-pred" +
+                                 std::to_string(tag) + ".csv");
+    y_test.write_to_csv("data/output/bev-sales-actual" + std::to_string(tag) +
+                        ".csv");
 }
 
-void cali_housing_reg(SOLVE_METHOD sm) {
+void cali_housing_reg(SOLVE_METHOD sm, int tag) {
     std::cerr << "Loading cali housing data..." << std::endl;
     dataset cali_housing_data =
         dataset("data/input/cali-housing-encoding2.csv", .20, 8, true);
@@ -176,7 +180,7 @@ void cali_housing_reg(SOLVE_METHOD sm) {
     y_test.head(15);
 
     linear_regression lr = linear_regression(LEAST_SQUARES, sm);
-    lr.fit(X_train, y_train, 100);
+    lr.fit(X_train, y_train, .01);
 
     std::cerr << "------------PREDICTED LABELS HEAD (15 rows)------------\n";
     matrix y_pred = lr.predict(X_test);
@@ -188,8 +192,10 @@ void cali_housing_reg(SOLVE_METHOD sm) {
     y_pred_unscaled.head(15);
     print_predictions_vs_actual(y_pred_unscaled, y_test, 20);
     evaluate_predictions(y_pred_unscaled, y_test, "CALI_HOUSING_PRICE");
-    y_pred_unscaled.write_to_csv("data/output/cali-housing-pred2.csv");
-    y_test.write_to_csv("data/output/cali-housing-actual2.csv");
+    y_pred_unscaled.write_to_csv("data/output/cali-housing-pred" +
+                                 std::to_string(tag) + ".csv");
+    y_test.write_to_csv("data/output/cali-housing-actual" +
+                        std::to_string(tag) + ".csv");
 }
 
 int main(int argc, char* argv[]) {
@@ -197,17 +203,20 @@ int main(int argc, char* argv[]) {
     std::cout << "Current working directory: " << cwd << std::endl;
 
     std::cout << "running linear regression on Salary" << std::endl;
-    salary_reg();
+    salary_reg(INVERSE, 1);
+    salary_reg(FACTORIZATION, 2);
 
     // std::this_thread::sleep_for(std::chrono::seconds(4));
     std::cout << "running linear regression on Beverage Sales Dataset"
               << std::endl;
 
-    bev_sales_reg();
+    bev_sales_reg(INVERSE, 1);
+    bev_sales_reg(FACTORIZATION, 2);
 
     // std::this_thread::sleep_for(std::chrono::seconds(4));
     std::cout << "running linear regression on California Housing Dataset"
               << std::endl;
 
-    cali_housing_reg(FACTORIZATION);
+    cali_housing_reg(INVERSE, 1);
+    cali_housing_reg(FACTORIZATION, 2);
 }
